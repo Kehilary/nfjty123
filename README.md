@@ -1,176 +1,71 @@
 
-package br.cefetmg.listas.lista09.r1004;
+package com.mycompany.mavenproject1;
 
 import java.util.Scanner;
 
-enum ErroLista {
-    INDICE_INVALIDO("PosicaoInvalidaException"),
-    VAZIA("NenhumItemException"),
-    SEM_ERRO("NenhumErro");
+abstract class Pilha {
     
-    String msgErro;
-    
-    ErroLista(String msg) {
-        msgErro = msg;
-    }
-    
-    public String getMessage() {
-        return msgErro;
-    }
-}
-
-class ErroListaWrapper {
-    private ErroLista erro;
-    
-    public ErroListaWrapper() {
-        this(ErroLista.SEM_ERRO);
-    }
-    
-    public ErroListaWrapper(ErroLista erro) {
-        this.erro = erro;
-    }
-
-    public ErroLista getErro() {
-        return erro;
-    }
-
-    public void setErro(ErroLista erro) {
-        this.erro = erro;
-    }
-}
-
-class Lista{
-    class No{
-        Integer item;
+     class No
+    {
+        Object item;
         No prox;
-        No ant;
-        No(Integer valor, No proxs, No ants){
-            item = valor;
-            prox = proxs;
-            ant = ants;
-        }
-    }
-    int tam;
-    No inicio = new No(null, null, null);
-    No fim = new No(null, null, null);
-
-    void adicionarFim(Integer valor){
-        No novo = new No(valor, null, null);
-        if(vazia()){
-            inicio = novo;
-            fim = novo;
-        }
-        else{
-            No aux = fim;
-            novo.ant = aux;
-            aux.prox = novo;
-            fim = novo; 
-        }
-        tam++;
-    }
-    void adicionarInicio(Integer valor){
-        No novo = new No(valor, null, null);
-        if(vazia()){
-            inicio = novo;
-            fim = novo;
-        }
-        else{
-            No aux = inicio;
-            novo.prox = aux;
-            aux.ant = novo;
-            inicio = novo;
-        }
-        tam++;
-    }
-    void adicionar(Integer valor, int posicao, ErroListaWrapper erro){
-        posicao = posicao - 1;
-        No novo = new No(valor, null, null);
-        if(vazia())
+        No(Object item, No prox)
         {
-            inicio = novo;
-            fim = novo;
+            this.item = item;
+            this.prox = prox;
         }
-        else{
-            No aux = inicio;
-            int x = 0;
-
-            if(posicao < (tam/2)){
-                aux = fim;
-                x = tam;
-            }
-
-            while(x >= 0 && x <=tam && x != posicao){
-                if(x < posicao){
-                    x++;
-                    aux = aux.prox;
-                }
-                else if(x > posicao){
-                    x--;
-                    aux = aux.ant;
-                }
-            }
-            tam++;
-            erro.setErro(ErroLista.SEM_ERRO);
+        No(Object item)
+        {
+            this.item = item;
         }
     }
-    void removerInicio(ErroListaWrapper erro){
-        if(vazia())
-            erro.setErro(ErroLista.VAZIA);
-
-        else{
-            No aux = inicio;
-	        inicio = aux.prox;
-	        inicio.ant = null;
-	        tam--;
-            erro.setErro(ErroLista.SEM_ERRO);
-        }
-    }
-void remover(ErroListaWrapper erro){
-            No aux = null;
-            No atual = inicio;
-            while((atual != null)){ 
-                aux = atual;
-                atual = atual.prox;
-    }
-        if(atual == null)
-            erro.setErro(ErroLista.VAZIA);
     
-    else{
-        if(atual == inicio)
-            inicio = atual.prox;
-        
-        else
-            aux.prox = atual.prox;
-        
+    
+    public abstract void empilhar(Object item);
+    
+    public abstract Object desempilhar();
+    
+    public abstract Object getItem();
+    
+    
+    public abstract int tamanho();
+    
 
-        tam--;
-        erro.setErro(ErroLista.SEM_ERRO);
-        } 
-        
-    void removerFim(ErroListaWrapper erro){
-        if(vazia())
-            erro.setErro(ErroLista.VAZIA);
+    public abstract boolean vazia();
+    
+    public abstract Object[] toArray();
+}
 
-        else{
-            No aux = fim;
-	        fim = aux.ant;
-	        fim.prox = null;
-	        tam--;
-            erro.setErro(ErroLista.SEM_ERRO);
-        }
-    }
-
-    int tamanho(){
-        return tam;
-    }
-
-    boolean vazia(){
-        return tam == 0 ? true : false;
-    }
-
-    Integer[] toArray() {
-        Integer[] v = new Integer[tam];
-        No auxs = new No(inicio.item, inicio.prox, null);
+class PilhaEncadeada extends Pilha
+{ 
+     int tam = 0;
+    No topo = new No(null, null);
+    @Override
+     public  void empilhar(Object item)
+     {
+        No novo =  new No(item, null);
+        novo.prox = topo;
+        topo = novo;
+        tam++;
+     }
+     
+      @Override
+      public  boolean vazia()
+      {
+          return tam == 0 ? true: false;
+      }
+     
+     @Override
+     public  int tamanho()
+     {
+         return tam;
+     }
+     
+      @Override
+     public Object[] toArray()
+     {
+        Object[] v = new Object[tam];
+        No auxs = new No(topo.item, topo.prox);
         if(tam != 0){
         for (int x = 0; x < tam; x++) {
             v[x] = auxs.item;
@@ -180,109 +75,142 @@ void remover(ErroListaWrapper erro){
 }
         else
             return null;
-    }
+     }
 
-    Integer getItem(int posicao, ErroListaWrapper erro){
-        if(vazia())
-            erro.setErro(ErroLista.VAZIA);
+      @Override
+     public  Object desempilhar()
+     {
+        if(tam == 0)
+            return null;
         else{
-            No aux = inicio;
-            int x = 0;
-            while(x < posicao){
-                aux = aux.prox;
-                x++;
-            }
-            erro.setErro(ErroLista.SEM_ERRO);
-            return aux.prox.item;
+        Object aux = topo.item;
+        No auxs =  topo;
+        topo = topo.prox;
+        auxs.prox = null;
+        tam--;
+        return aux;
+        }
+     }
+     
+      @Override
+      public  Object getItem()
+      {
+        return topo.item;
+      }
+      
+      
+}
+
+
+class PilhaArray extends Pilha 
+{ 
+   int  tam = -1;
+    Object []vetor= new Object[1000];
+    
+    @Override
+    public  void empilhar(Object item)
+    {
+         if(tam < vetor.length - 1) 
+            vetor[++tam] = item;
+
+    }
+    
+    @Override
+     public  Object desempilhar()
+     {
+       if(vazia())
+            return null;
+        else
+        {
+        Object x = vetor[--tam];
+        return x;
         }
     }
 
-    Integer getItem(ErroListaWrapper erro){
-        if(vazia())
-            erro.setErro(ErroLista.VAZIA);
-        else 
-            erro.setErro(ErroLista.SEM_ERRO);
-            return tam;
-    }
+     @Override
+     public Object[] toArray()
+     {
+        return vetor;
+     }
 
+     @Override
+    public  Object getItem()
+    {
+        if(vazia())
+            return null;
+        else
+            return vetor[tam--];
+    }
+    
+@Override
+      public boolean vazia()
+      {
+         return tam == -1 ? true : false;
+      }
+    
+ @Override
+     public  int tamanho()
+     {
+         return tam;
+     }
+      
 }
 
 class Main {
 
+    private Pilha pilha;
+
+    public Main(Pilha pilha) {
+        this.pilha = pilha;
+    }
+
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        Lista lista = new Lista();
+        Main main;
         String token;
-        Integer valor;
-        int posicao;
-        ErroListaWrapper erro = new ErroListaWrapper();
+        Object valor;
         
         token = in.next();
+
+        if (token.equals("pe"))
+            main = new Main(new PilhaEncadeada());
+        else
+            main = new Main(new PilhaArray());
+
         while (!token.equals("Q")) {
-            erro.setErro(ErroLista.SEM_ERRO);
             switch(token) {
-                case "AF":
+                case "E":
                     valor = in.nextInt();
-                    lista.adicionarFim(valor);
+                    main.pilha.empilhar(valor);
                     break;
-                case "AI":
-                    valor = in.nextInt();
-                    lista.adicionarInicio(valor);
-                    break;                    
-                case "AP":
-                    posicao = in.nextInt();
-                    valor = in.nextInt();
-                    lista.adicionar(valor, posicao, erro);
-                    if (erro.getErro() != ErroLista.SEM_ERRO)
-                        System.out.println(erro.getErro().getMessage());
-                    break;          
-                case "RI":
-                    lista.removerInicio(erro);
-                    if (erro.getErro() != ErroLista.SEM_ERRO)
-                        System.out.println(erro.getErro().getMessage());
-                    break;
-                case "RF":
-                    lista.removerFim(erro);
-                    if (erro.getErro() != ErroLista.SEM_ERRO)
-                        System.out.println(erro.getErro().getMessage());
-                    break;
-                case "RP":                    
-                    posicao = in.nextInt();
-                    lista.remover(posicao, erro);
-                    if (erro.getErro() != ErroLista.SEM_ERRO)
-                        System.out.println(erro.getErro().getMessage());
+                case "D":
+                    valor = main.pilha.desempilhar();
+                    if (valor == null)
+                        System.out.println("NenhumItemException");
                     break;
                 case "G":
-                    valor = lista.getItem(erro);
-                    if (erro.getErro() != ErroLista.SEM_ERRO)
-                        System.out.println(erro.getErro().getMessage());
-                    else
+                    valor = main.pilha.getItem();
+                    if (valor != null)
                         System.out.println(valor);
-                    break;
-                case "GP":
-                    posicao = in.nextInt();
-                    valor = lista.getItem(posicao, erro);
-                    if (erro.getErro() != ErroLista.SEM_ERRO)
-                        System.out.println(erro.getErro().getMessage());
                     else
-                        System.out.println(valor);
+                        System.out.println("NenhumItemException");
                     break;
                 case "T":
-                    System.out.println(lista.tamanho());
+                    System.out.println(main.pilha.tamanho());
                     break;
                 case "V":
-                    System.out.println(lista.vazia());
+                    System.out.println(main.pilha.vazia());
                     break;
                 case "P":
-                    Integer valores[] = lista.toArray();
+                    Object valores[] = main.pilha.toArray();
                     if (valores != null) {
-                        for(Integer item: valores)
+                        for(Object item: valores)
                             System.out.println(item);
                     }
                     break;
             }
             token = in.next();
-        }   
+        }
     }
 }
 
