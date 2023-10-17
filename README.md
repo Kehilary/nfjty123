@@ -1,803 +1,293 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cadastro Funcionário</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="estilos.css">
+        <link rel="icon" href="leme.png" type="image/webp">
+    </head>
+    <body>
+         <header id="headerUsuario">
+             <h1 id="altoMare">Alto Mare</h1>
+            <h2 id="embarcacoes">EMBARCAÇÕES</h2>
+            <img id="leme" src="leme.png" />
+            <div id="linha"></div>
+        </header>
+        <div id="barraDeTarefas">
+            <div id="imagemBarra">
+           <img class="imgg" src="funcionarios.png">
+           <img class="imgg" src="passageiros.webp">
+           <img class="imgg" src="pacotes.png">
+           <img class="imgg" src="iconeSeguranca.png">
+           <img class="imgg" src="cronograma.png">
+            </div>
+        </div>
+        <h1 id="cadastro">Cadastro Passageiro</h1>
+        <div id="dados">
+        <form name="formInsereFuncionario" method="post">
+                <input type='hidden' name='table' value='funcionario'>
+                <input type='hidden' name='acao' value='gravar'>
+                    <tr>
+                        <td>
+                            Nome:
+                        </td>
+                        <td>
+                            <input type='text' name='nome' placeholder="digite o nome completo">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                           Data de nascimento:
+                        </td>
+                        <td>
+                            <input type="date" name="dataAdmissao" value="">
+                           
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Sexo:
+                        </td>
+                        <td>
+                            <select name="sexo">
+                                <option value="">Escolher</option>
+                                <option value="masculino">Maculino</option>
+                                <option value="feminino">Feminino</option>
+                                <option value="naoInformado">Prefiro não informar</option>
+                            </select>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td>
+                            Estado Civil:
+                        </td>
+                        <td>
+                            <select name="estadoCivil">
+                                <option value="">Escolher</option>
+                                <option value="casado">Casado</option>
+                                <option value="solteiro">Solteiro</option>
+                                <option value="divorciado">Divorciado</option>
+                                <option value="viuvo">Viúvo</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            CPF:
+                        </td>
+                        <td>
+                            <input type='text' name='cpf'  data-ls-module="charCounter" maxlength="14" placeholder="ex: xxx.xxx.xxx-xx">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                           RG:
+                        </td>
+                        <td>
+                            <input type='text' name='rg'  data-ls-module="charCounter" maxlength="13" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Data de Nascimento:
+                        </td>
+                        <td>
+                            <input type='date' name='dataNascimento' value=''>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Email:
+                        </td>
+                        <td>
+                            <input type='email' name='email' value=''>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Telefone:
+                        </td>
+                        <td>
+                            <input type='tel' name='telefone'  placeholder="ex: (xx) xxxxx-xxxx">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2' aling='center'>
+                            <input type='button' onclick="GravarAlterarTabela(document.frmInserirCliente)" value='Cadastrar'>&nbsp;
+                           
+                        </td>
+                    </tr>
+                </table> 
+        </form>
+    </div>
+    </body>
 
+ @import url('https://fonts.googleapis.com/css2?family=Alegreya+SC&family=Dancing+Script&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Alegreya+SC&family=Pathway+Gothic+One&display=swap');
 
-package com.mycompany.main;
-
-import java.nio.file.FileAlreadyExistsException;
-import java.util.Scanner;
-import java.util.Arrays;
-
-class NenhumItemException extends RuntimeException{
-    public NenhumItemException(){
-        super("NenhumItemException");
-    }
-}
-
-class PosicaoInvalidaException extends RuntimeException{
-    public PosicaoInvalidaException(){
-        super("PosicaoInvalidaException");
-    }
-}
-
-interface ListaCommon {
-    Object getItem( );  // throws NenhumItemException
-    int tamanho();
-    boolean vazia();
-    Object[] toArray(); // throws NenhumItemException
-}
-
-interface ListaBasica extends ListaCommon {
-    void adicionar(Object item);
-    Object remover();   // throws NenhumItemException
-}
-
-interface Pilha extends ListaCommon {
-    void empilhar(Object item);
-    Object desempilhar();       // throws NenhumItemException   
-}
-
-class PilhaEncadeada implements Pilha 
-    { 
-    int tam = 0;
-        class No
-        {
-            Object item;
-            No prox;
-            No(Object item, No prox)
-            {
-                this.item = item;
-                this.prox = prox;
-            }
-        }
-        No topo = new No(null, null);
-    
-       
-         public void empilhar(Object item)
-         {
-            No novo =  new No(item, null);
-            novo.prox = topo;
-            topo = novo;
-            tam++;
-         }
-
-
-         @Override
-         public boolean vazia()
-         { return tam == 0 ? true : false;}
-         
-        @Override
-         public Object[] toArray()
-         {
-            Object[] v = new Object[tam];
-            No auxs = new No(topo.item, topo.prox);
-            if(tam != 0){
-                for (int x = 0; x < tam; x++) {
-                    v[x] = auxs.item;
-                    auxs = auxs.prox;
-            }
-            return v;
-    }
-            else{
-                throw new NenhumItemException();
-                
-            }
-         }
-    
-          @Override
-         public  Object desempilhar()
-         {
-            if(vazia()){
-                throw new NenhumItemException();
-                
-         }
-            else{
-            Object aux = topo.item;
-            No auxs =  topo;
-            topo = topo.prox;
-            auxs.prox = null;
-            tam--;
-            return aux;
-            }
-         }
-         
-          @Override
-          public  Object getItem()
-          {
-            if(vazia())
-            {
-                throw new NenhumItemException();
-               
-            }
-            return topo.item;
-          }    
-    }
-
-
-
-class PilhaArray implements Pilha 
-{ 
-    int tam = 0;
-    Object []vetor= new Object[1000];
-    
-    @Override
-    public  void empilhar(Object item)
-    {
-        vetor[tam] = item;
-        tam++;
-    }
-    
-    @Override
-    public boolean vazia()
-    { return tam == 0 ? true : false;}
-
-    @Override
-     public  Object desempilhar()
-     {
-       if(vazia()){
-            throw new NenhumItemException();
-           
-       }
-        else 
-        {
-            int p = tam - 1;
-            Object d = vetor[p];
-            vetor[p] = vetor[tam--];
-           return   d; 
-        }
-
-        
-    }
-
-     @Override
-     public Object[] toArray()
-     {
-        if(vazia())
-        {
-            throw new NenhumItemException();
-            
-        }
-        else{
-        Object []v = new Object[tam];
-        for(int a = 0; a < tam ; a++)
-            v[tam - 1 - a] = vetor[a];
-
-        return v; 
-        }
-     }
-
-     @Override
-    public  Object getItem()
-    {
-        if(!vazia()){
-            int y = tam - 1;
-            return vetor[y];
-        }
-        else {
-            throw new NenhumItemException();
-            
-        }
-    }
-}
-
-interface Fila extends ListaCommon {
-    void enfileirar(Object item);
-    Object desenfileirar();     // throws NenhumItemException
-}
-
-// FAZER O MESMO QUE FOI FEITO PARA Pilha
-class FilaEncadeada implements Fila
-    {
-    int tam = 0;
-        class No
-        {
-            Object item;
-            No prox;
-            No(Object item, No prox)
-            {
-                this.item = item;
-                this.prox = prox;
-            }
-        }
-         No inicio = new No(null, null);
-         @Override
-        public void enfileirar(Object item)
-        {
-            No novo = new No(item, null);
-            if(tam == 0)
-                inicio = novo;
-            else
-            {
-                No aux = inicio;
-                while(aux.prox != null)
-                    aux = aux.prox;
-    
-                aux.prox = novo;
-            }
-            tam++;
-        }
-         @Override
-        public Object desenfileirar()
-        {
-            if(vazia()){
-                throw new NenhumItemException();
-                
-            }
-            else{
-                Object dado = inicio.item;
-                No aux = inicio;
-                inicio = aux.prox;
-                tam--;
-                return dado;
-            }
-        }
-         @Override
-        public Object getItem()
-        {
-            if(vazia()){
-                throw new NenhumItemException();
-                
-            }
-            else
-            return inicio.item;
-        }
-
-        @Override
-        public int tamanho() { return tam; }
-        
-        @Override
-        public boolean vazia(){ return tam == 0 ? true : false;}
-
-         @Override
-        public Object[] toArray()
-        {
-            Object[] v = new Object[tam];
-            No auxs = new No(inicio.item, inicio.prox);
-            if(tam != 0){
-            for (int x = 0; x < tam; x++) {
-                v[x] = auxs.item;
-                auxs = auxs.prox;
-            }
-            return v;
-    }
-            else{
-                throw new NenhumItemException();
-                
-            }
-        }
-        }
-    
-class FilaArray implements Fila
-{
-    int tam = 0;
-    Object []vetor = new Object[1000];
-
-    @Override
-        public int tamanho() { return tam; }
-        
-        @Override
-        public boolean vazia(){ return tam == 0 ? true : false;}
-
-
-     @Override
-     public void enfileirar(Object item)
-    {
-        vetor[tam] = item;
-        tam++;
-    }
-     @Override
-    public Object desenfileirar()
-    {
-        if(vazia()){
-        throw new NenhumItemException();
-            
-        }
-        else
-        {
-            Object valor = vetor[0];
-            
-            vetor = Arrays.copyOfRange(vetor, 1, vetor.length);
-            tam--;
-            return valor;
-        }
-    }
-    
-    
-     @Override
-    public Object getItem()
-    {
-        if(vazia()){
-        throw new NenhumItemException();
-        
-        }
-        else
-        return vetor[0];
-    }
-
-     @Override
-    public Object[] toArray()
-    {
-        if(vazia())
-        {
-            throw new NenhumItemException();
-          
-        }
-        else{
-        Object []v = new Object[tam];
-        for(int a = 0; a < tam ; a++)
-            v[a] = vetor[a];
-
-        return v; 
-        }
-    }
+html, body{
+    min-height: 100%;
+    margin: 0;
 }
 
 
-interface Lista extends ListaBasica {
-    void adicionarInicio(Object item);
-    void adicionarFim(Object item);
-    void adicionar(Object item, int posicao);   // throws PosicaoInvalidaException
-    Object removerInicio();         // throws NenhumItemException
-    Object removerFim();            // throws NenhumItemException
-    Object remover(int posicao);    // throws NenhumItemException, PosicaoInvalidaExeption
-    Object getItem(int posicao);    // throws PosicaoInvalidaExeption
+.imgg{
+    height: 70px;
 }
 
-class ListaEncadeada implements Lista {
-    class No
-    {
-        Object item;
-        No prox;
-        No(Object item, No prox)
-        {
-            this.item = item;
-            this.prox = prox;
-        }
-    }
-    No inicio = new No(null, null);
-    No fim = new No(null, null);
-    int tam  =0;
-
-    @Override
-    public  void adicionarFim(Object item)
-    {
-        No novo = new No(item, null);
-        if(tam == 0)
-            inicio = novo;
-
-            fim.prox = novo;
-            fim = novo;
-        tam++;
-    }
-
-    @Override
-    public int tamanho() { return tam; }
-    
-    @Override
-    public boolean vazia(){ return tam == 0 ? true : false;}
-
-    @Override
-    public  void adicionarInicio(Object item)
-    {
-        No novo = new No(item, null);
-        No aux = inicio;
-        inicio = novo;
-        novo.prox = aux;
-        tam++;
-    }
-
-    @Override
-    public void adicionar(Object valor, int posicao)
-    {
-         if(posicao >= 0 && posicao <= tam)
-        {
-            if(posicao == 0)
-                adicionarInicio(valor);
-            else{
-                No novo = new No(valor, null);
-                No auxProx = inicio.prox;
-                No auxAnt = inicio;
-                for(int num = 0; num < posicao-1; num++)
-                    {
-                        auxAnt = auxProx;
-                        auxProx = auxProx.prox;
-                    }
-                    auxAnt.prox = novo;
-                    novo.prox = auxProx;
-                    tam++;
-                    
-            }
-        }
-        else
-        throw new NenhumItemException();
-        
-    }
-
-    @Override
-    public Object removerInicio()
-    {
-         if(vazia()){
-            throw new NenhumItemException();
-            
-         }
-        else{
-            Object dado = inicio.item;
-            inicio = inicio.prox;
-            tam--;
-            
-            return dado;
-        }
-    }
-
-    @Override
-    public Object removerFim()
-    {
-        if(vazia()){
-            throw new NenhumItemException();
-            
-        }
-        else{
-            No auxAnt = inicio;
-            No auxProx = inicio.prox;
-            while(auxProx != null){
-                auxAnt = auxProx;
-                auxProx = auxProx.prox;
-            }
-            Object dado = auxAnt.prox.item;
-            auxAnt.prox = null;
-            tam--;
-            
-            return dado;
-    }
-    }
-
-    @Override
-    public Object remover(int posicao)
-    {
-         if(vazia())
-         {
-            throw new NenhumItemException();
-            
-    }
-    else if(posicao == 0)
-             return removerInicio();
-
-     else if(posicao > tam || posicao < 0 || posicao == 1 && tam == 1)
-        {
-            throw new PosicaoInvalidaException();
-            
-        }
-        else{
-            No auxP = inicio.prox;
-            No auxA = inicio;
-            for(int num = 0; num < posicao-1; num++){
-                auxA = auxP;
-                auxP = auxP.prox;
-            }
-            Object dado = auxA.prox.item;
-            auxA.prox = auxP.prox;
-            tam--;
-          
-          return dado;
-        }
-    }
- 
-
-    @Override
-    public Object getItem()
-    {
-        if(vazia()){
-        throw new NenhumItemException();
-       
-        }
-        else 
-        return inicio.item;
-    }
-    
-    @Override
-    public Object getItem(int posicao)
-    {
-        if(vazia()){
-            throw new NenhumItemException();
-           
-        }
-        else{
-            No aux = inicio;
-            for(int num = 0; num < posicao-1; num++){
-                aux = aux.prox;
-            }
-            Object dado = aux.item;
-            
-            return dado;
-        }
-    }
-    
-    @Override
-    public Object[] toArray()
-    {
-        Object[] v = new Object[tam];
-        No auxs = new No(inicio.item, inicio.prox);
-        if(tam != 0){
-            for (int x = 0; x < tam; x++) {
-                v[x] = auxs.item;
-                auxs = auxs.prox;
-            }
-            return v;
-        }
-        else{
-            throw new NenhumItemException();
-            
-        }
-    }
+#headerUsuario{
+    background-color: rgb(5, 50, 112);
+    margin-bottom: -2%;
+    padding-top: 0.2%;
+    padding-bottom:-1%;
+    text-align: center;
+    margin-top: -1%;
 }
 
-class ListaArray implements Lista {
-    Object []vetor = new Object[1000];
-    int tam =0;
-
-     @Override
-    public  void adicionarFim(Object item)
-    {
-        if(vazia())
-            vetor[0] = item;
-        else
-            vetor[tam] = item;
-        tam++;
-    }
-
-    @Override
-    public int tamanho() { return tam; }
+#barraDeTarefas{
+    background-color: rgb(5, 50, 112);
+    margin-top: 2%;
+    padding-bottom: 2%;
+   
     
-    @Override
-    public boolean vazia(){ return tam == 0 ? true : false;}
-
-    @Override
-    public  void adicionarInicio(Object item)
-    {
-        if(vazia())
-            vetor[0] = item;
-
-        else{
-            Object []v = new Object[1000];
-            v[0] = item;
-            for(int x = 0; x < tam; x++)
-                v[x+1] = vetor[x];
-
-                vetor = v;
-        }
-        tam++;
-    }
-
-    @Override
-    public void adicionar(Object valor, int posicao)
-    {
-        if(vazia()){
-        throw new NenhumItemException();
-        
-    }
-
-        if(posicao < 0 || posicao > tam)
-        throw new PosicaoInvalidaException();
-
-        else
-        {
-            Object []v = new Object[1000];
-            v[posicao] = valor;
-            for(int w = posicao; w < tam; w++)
-                v[w+1] = vetor[w]; 
-             
-
-            for(int x = posicao; x <= tam; x++)
-                vetor[x] = v[x];
-                 
-                
-                 
-        }
-    tam++;
-    }
-    
-
-    @Override
-    public Object removerInicio()
-    {
-         if(vazia()){
-           throw new NenhumItemException();
-            
-        }
-        else{
-        Object valor = vetor[0];
-            vetor = Arrays.copyOfRange(vetor, 1, vetor.length);
-            tam--;
-            
-            return valor;
-        }
-    }
-
-    @Override
-    public Object removerFim()
-    {
-        if(vazia()){
-            throw new NenhumItemException();
-             
-        }
-        else{
-             
-             return vetor[tam--];
-        }
-    }
-
-    @Override
-    public Object remover(int posicao)
-    {
-        if(vazia())
-        {
-            throw new NenhumItemException();
-             
-        }
-        else if(posicao == 0)
-           return removerInicio();
-
-
-        else if(posicao > tam || posicao < 0 || posicao == 1 && tam == 1)
-        {
-            throw new PosicaoInvalidaException();
-            
-        }
-        
-
-        else{
-            Object dado = vetor[posicao];
-            for(int i = posicao; i < tam-1; i++)
-                {
-                    vetor[i] = vetor[i+1];
-                }
-                    tam--;
-                    
-                    return dado;
-                    
-                }
-        }
-    
-
-    @Override
-    public Object getItem()
-    {
-         if(vazia()){
-            throw new NenhumItemException();
-                
-         }
-        else{ 
-        return vetor[0];
-        }
-    }
-    
-    @Override
-    public Object getItem(int posicao)
-    {
-        if(vazia()){
-            throw new NenhumItemException();
-                
-         }
-        else{ 
-
-        return vetor[posicao];
-        }
-    }
-    
-    @Override
-    public Object[] toArray()
-    {
-        Object []v = new Object[tam];
-        for(int a = 0; a < tam ; a++)
-            v[a] = vetor[a];
-
-        return v; 
-    }
+}
+#imagemBarra{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: 1%
+   
 }
 
-class PilhaAdapter implements ListaBasica {
-    
-    private final Pilha pilha;
-
-    public PilhaAdapter(Pilha pilha) {
-        this.pilha = pilha;
-    }    
-    
-    @Override
-    public void adicionar(Object item) {
-        pilha.empilhar(item);
-    }
-
-    @Override
-    public Object remover() {
-        return pilha.desempilhar();
-    }
-
-    @Override
-    public Object getItem() {
-        return pilha.getItem();
-    }
-
-    @Override
-    public int tamanho() {
-        return pilha.tamanho();
-    }
-
-    @Override
-    public boolean vazia() {
-        return pilha.vazia();
-    }
-
-    @Override
-    public Object[] toArray() {
-        return pilha.toArray();
-    }    
+#foto{
+    border: 1px solid black;
+    margin-top: 3%;
+    padding-top: 10%;
+    padding-bottom: 5%;
+    padding-left: 5%;
+    background-color: white;
 }
 
-class Main {
-
-    private final ListaBasica lista;
-    
-    public Main(ListaBasica lista) {
-        this.lista = lista;
-    }
-    
-    public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        Main main;
-        String token;
-        Object valor;
-        
-        token = in.next();
-        
-        switch (token) {
-            case "PE": main = new Main(new PilhaAdapter(new PilhaEncadeada())); break;
-            case "PA": main = new Main(new PilhaAdapter(PilhaArray())); break;
-            case "FE": main = new Main(new FilaAdapter(FilaEncadeada())); break;
-            case "FA": main = new Main(new FilaAdapter(FilaArray())); break;
-            case "LE": main = new Main(new ListaEncadeada()); break;
-            default: main = new Main(new ListaArray());
-        }
-        
-        while (!token.equals("Q")) {
-            switch(token) {
-                case "A":   // adiciona um item
-                    valor = in.nextInt();
-                    main.lista.adicionar(valor);
-                    break;      
-                case "R":   // remove um item
-                    try {
-                        main.lista.remover();
-                    } catch(NenhumItemException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-                case "G":   // retorna um item, sem remover
-                    try {
-                        valor = (Integer) main.lista.getItem();
-                        System.out.println(valor);
-                    } catch (NenhumItemException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-                case "T":   // numero de itens na estrutura
-                    System.out.println(main.lista.tamanho());
-                    break;
-                case "V":   // indica se a estrutura esta vazia
-                    System.out.println(main.lista.vazia());
-                    break;
-                case "P":   // imprime os itens da estrutura, sem remover
-                    try {
-                        Object valores[] = main.lista.toArray();
-                        if (valores != null) 
-                            for(Object item: valores)
-                                System.out.println(item);
-                    } catch (NenhumItemException e) {
-                        System.out.println(e.getMessage());
-                    }    
-                    break;
-            }
-            token = in.next();
-        }
-        in.close();
-    }
+main{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content:  center;
 }
 
+#cadastro{
+    margin-left: 45%;
+}
+#telefone{
+
+    background-color: blue;
+}
+
+#setor-admissao{
+
+    background-color: red;
+}
+
+#foto-botao{
+   
+    background-color: green;
+}
+#dados{
+    display: flexbox;
+    
+    background-color: rgb(138, 145, 142);
+}
+#embarcacoes{
+   font-size: 3em;
+   color: white;
+   margin-top: 0%;
+   font-family: 'Pathway Gothic One', sans-serif;
+}
+
+#altoMare{
+    font-size: 4em;
+    color: white;
+    font-family: 'Dancing Script', cursive;
+    font-style: italic;  
+    margin: 0%;
+   
+}
+
+.campos{
+  height: 20px;
+  font-size: 60%;
+}
+
+#embarcacoesUsuarios{
+   font-size: 150%;
+   color: white;
+   padding-top: 3%;
+   margin-top: -7%;
+}
+
+#lemeUsuarios{
+    width: 8%;
+    float: left;
+    margin-top: -9%;
+    margin-left: 10%;
+}
+
+#altoMare{
+    padding-bottom: -30%;
+    margin-top: 2%;
+    font-size:600%;
+    color: white;
+    font-family: Dancing Script;
+    font-style: italic; 
+}
+
+#leme{
+    width: 10%;
+    float: left;
+    margin-top: -12%;
+    margin-left: 10%;
+}
+
+#linha{
+    background-color: rgb(114, 146, 189);
+    padding-top: 0.40%;
+    margin-top: -1%;
+}
+
+#header1{
+    background-color: rgb(5, 50, 112);
+    margin-bottom: -2%;
+    padding-top: 0.2%;
+    padding-bottom:-1%;
+    text-align: center; 
+}
+#cadastroFunc{
+    background-color: rgb(217, 217, 217);
+    border-radius: 5%;
+
+}
+
+#titulo{
+    text-align: center;
+    font-family: Bebas Neue;
+}
+
+#botao{
+   padding-bottom: 2%;
+   border-radius: 10%;
+   padding-top: 2%;
+   width: 50%;
+   font-size: 70%;
+   background-color: rgb(5, 50, 112);
+   color: white;
+}
+
+#login{
+    text-align: center;
+    font-size: 200%;
+    margin-left: 35%;
+    margin-right: 35%;
+    margin-top: 1%;
+    padding-bottom: 2%;
+    padding-top: 1%;
+}
